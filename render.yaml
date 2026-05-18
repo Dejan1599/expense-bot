@@ -1,0 +1,21 @@
+services:
+  - type: worker
+    name: expense-bot
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot.py
+    envVars:
+      - key: TELEGRAM_TOKEN
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: ALLOWED_USER_ID
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: DB_PATH
+        value: /data/expenses.db
+    disk:
+      name: bot-data
+      mountPath: /data
+      sizeGB: 1
