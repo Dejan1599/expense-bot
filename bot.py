@@ -107,7 +107,14 @@ Poruka: "{text}"
         max_tokens=100,
         messages=[{"role": "user", "content": prompt}]
     )
-    return json.loads(response.content[0].text.strip())
+    raw = response.content[0].text.strip()
+    print(f"[DEBUG] Claude: {raw}", flush=True)
+    # ocisti markdown code blokove ako postoje
+    if raw.startswith("```"):
+        raw = raw.split("```")[1]
+        if raw.startswith("json"):
+            raw = raw[4:]
+    return json.loads(raw.strip())
 
 # ── Claude: parsiranje slike računa ──────────────────────────────────────────
 def parse_expense_image(image_bytes, media_type="image/jpeg"):
@@ -140,7 +147,14 @@ Ako ne možeš da prepoznaš račun, vrati {"is_expense": false}"""
             ]
         }]
     )
-    return json.loads(response.content[0].text.strip())
+    raw = response.content[0].text.strip()
+    print(f"[DEBUG] Claude: {raw}", flush=True)
+    # ocisti markdown code blokove ako postoje
+    if raw.startswith("```"):
+        raw = raw.split("```")[1]
+        if raw.startswith("json"):
+            raw = raw[4:]
+    return json.loads(raw.strip())
 
 # ── Groq Whisper: transkripcija glasovne poruke ───────────────────────────────
 def transcribe_voice(ogg_bytes):
